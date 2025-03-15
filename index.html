@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firework Clicker</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --text-dark: #ffffff;
+            --button-dark: #1f1f1f;
+            --bg-light: #f4f4f4;
+            --text-light: #000000;
+            --button-light: #ffffff;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+            transition: background 0.3s, color 0.3s;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 16px;
+            background: var(--button-dark);
+            color: var(--text-dark);
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .intro-screen {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-in-out;
+            max-width: 90%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .intro-screen h1 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+
+        .start-button {
+            background: #ffcc00;
+            color: #000;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .start-button:hover {
+            background: #e6b800;
+        }
+
+        .firework-button {
+            display: none;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            background: linear-gradient(45deg, red, orange, yellow, green, blue, violet);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            transition: transform 0.2s;
+            position: absolute;
+            bottom: 20px;
+        }
+
+        .firework-button:hover {
+            transform: scale(1.1);
+        }
+
+        body.light-theme {
+            background-color: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        .light-theme .theme-toggle {
+            background: var(--button-light);
+            color: var(--text-light);
+        }
+
+        .light-theme .intro-screen {
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .firework {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            opacity: 1;
+            transform: scale(1);
+            animation: explode 1s forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* Signature */
+        .signature {
+            position: absolute;
+            bottom: 5px;
+            right: 10px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive Styling */
+        @media (max-width: 768px) {
+            .firework-button {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            .theme-toggle {
+                padding: 8px 14px;
+                font-size: 0.9rem;
+            }
+            .start-button {
+                padding: 10px 16px;
+                font-size: 1rem;
+            }
+            .intro-screen h1 {
+                font-size: 1.5rem;
+            }
+            .signature {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-toggle">🌙 Touch Me</button>
+    <div class="intro-screen">
+        <h1>🎇 Firework Clicker 🎇</h1>
+        <button class="start-button">Start</button>
+    </div>
+    <button class="firework-button">🎆</button>
+
+    <!-- Signature -->
+    <div class="signature">Made by Abhinandh KR</div>
+
+    <script>
+        const themeToggle = document.querySelector('.theme-toggle');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            themeToggle.textContent = document.body.classList.contains('light-theme') ? "🌙 Dark Mode" : "☀️ Light Mode";
+        });
+
+        document.querySelector('.start-button').addEventListener('click', function() {
+            document.querySelector('.intro-screen').style.display = 'none';
+            document.querySelector('.firework-button').style.display = 'block';
+        });
+
+        document.querySelector('.firework-button').addEventListener('click', function(event) {
+            for (let i = 0; i < 50; i++) {
+                createFirework(event.clientX, event.clientY);
+            }
+        });
+
+        function createFirework(x, y) {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            document.body.appendChild(firework);
+
+            const colors = ['red', 'yellow', 'blue', 'green', 'purple', 'orange', 'pink'];
+            firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+
+            const angle = Math.random() * 2 * Math.PI;
+            const speed = Math.random() * 20 + 10;
+            const velocityX = Math.cos(angle) * speed;
+            const velocityY = Math.sin(angle) * speed;
+
+            let time = 0;
+            const interval = setInterval(() => {
+                firework.style.left = `${parseFloat(firework.style.left) + velocityX}px`;
+                firework.style.top = `${parseFloat(firework.style.top) + velocityY}px`;
+                firework.style.opacity = 1 - time / 20;
+                firework.style.transform = `scale(${1 + time / 10})`;
+                time++;
+                if (time > 20) {
+                    clearInterval(interval);
+                    firework.remove();
+                }
+            }, 30);
+        }
+    </script>
+</body>
+</html>
